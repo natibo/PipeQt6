@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit, QHBoxLayout, QMessageBox
+from PyQt6.QtWidgets import (QApplication, QMainWindow, QLabel,
+                             QVBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox)
 import sqlite3
-import json
 
 # Define a class for the pipes and its attributes
+
 
 class Pipe:
 
@@ -17,22 +18,23 @@ class Pipe:
         self.buyyear = buyyear
 
 # Insert an object into the database
-    
+
+
 def insert_pipe(pipe):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS pipes
     (pipe_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
     name TEXT, maker TEXT, shape TEXT, store TEXT, buyyear INT);""")
-    
-    
+
     c.execute('INSERT INTO pipes (name, maker, shape, store, buyyear) VALUES (?, ?, ?, ?, ?)',
               (pipe.name, pipe.maker, pipe.shape, pipe.store, pipe.buyyear))
     conn.commit()
     conn.close()
     
 # Create a PyQt6 GUI to enter object attributes and add them to the database
-    
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
