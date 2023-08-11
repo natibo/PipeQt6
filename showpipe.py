@@ -1,11 +1,9 @@
-import sys
 import sqlite3
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
-
-class Printpipe(QMainWindow):
-    def __init__(self, table_name):
+from PyQt6.QtWidgets import (QApplication, QMainWindow,
+                             QTableWidget, QTableWidgetItem, QWidget)
+class Showpipe(QMainWindow):
+    def __init__(self):
         super().__init__()
-        self.table_name = table_name
         self.init_ui()
 
     def init_ui(self):
@@ -21,7 +19,7 @@ class Printpipe(QMainWindow):
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute(f"SELECT * FROM {self.table_name}")
+        cursor.execute("SELECT * FROM pipes")
         rows = cursor.fetchall()
 
         if len(rows) > 0:
@@ -41,9 +39,3 @@ class Printpipe(QMainWindow):
 
         connection.close()
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    table_name = "pipes"  # Replace with your table name
-    window = Printpipe(table_name)
-    window.show()
-    sys.exit(app.exec())

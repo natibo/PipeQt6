@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 import sys
 import sqlite3
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import (QApplication, QMainWindow,
+                             QTableWidget, QTableWidgetItem, QWidget)
 
 class Printpipe(QMainWindow):
     def __init__(self, table_name):
@@ -41,9 +44,10 @@ class Printpipe(QMainWindow):
 
         connection.close()
 
-if __name__ == "__main__":
+def windowpipe():
     app = QApplication(sys.argv)
     table_name = "pipes"  # Replace with your table name
-    window = Printpipe(table_name)
-    window.show()
-    sys.exit(app.exec())
+    window2 = Printpipe(table_name)
+    window2.show()
+    # sys.exit(app.exec())
+    app.exec()

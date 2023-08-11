@@ -1,29 +1,34 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox
 
-class MainWindow(QMainWindow):
+
+class PopupWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.init_ui()
 
-        self.setWindowTitle("Main Window")
+    def init_ui(self):
         self.setGeometry(100, 100, 300, 200)
+        self.setWindowTitle('Popup Warning Example')
 
-        button = QPushButton("Check Condition", self)
-        button.setGeometry(50, 50, 200, 50)
-        button.clicked.connect(self.check_condition)
+        self.warning_button = QPushButton('Show Warning', self)
+        self.warning_button.setGeometry(50, 50, 200, 50)
+        self.warning_button.clicked.connect(self.show_warning)
 
-    def check_condition(self):
-        condition_met = True  # Replace this with your actual condition
+    def show_warning(self):
+        condition = True  # Replace with your actual condition
 
-        if condition_met:
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Message Box")
-            msg_box.setText("Condition is met. This is a message box outside of the main window.")
-            msg_box.setIcon(QMessageBox.Icon.Information)
-            msg_box.exec_()
+        if condition:
+            warning_box = QMessageBox()
+            warning_box.setIcon(QMessageBox.Icon.Warning)
+            warning_box.setWindowTitle('Warning')
+            warning_box.setText('This is a warning message!')
+            warning_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+            warning_box.exec()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = PopupWindow()
     window.show()
     sys.exit(app.exec())

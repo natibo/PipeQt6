@@ -2,11 +2,11 @@
 
 import sys
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QLabel,
-                             QVBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox)
+                             QVBoxLayout, QWidget, QLineEdit, QPushButton, QMessageBox)
 import sqlite3
 
-# Define a class for the pipes and its attributes
 
+# Define a class for the pipes and its attributes
 
 class Pipe:
 
@@ -17,8 +17,8 @@ class Pipe:
         self.store = store
         self.buyyear = buyyear
 
-# Insert an object into the database
 
+# Insert an object into the database
 
 def insert_pipe(pipe):
     conn = sqlite3.connect('database.db')
@@ -27,14 +27,29 @@ def insert_pipe(pipe):
     (pipe_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
     name TEXT, maker TEXT, shape TEXT, store TEXT, buyyear INT);""")
 
-    c.execute('INSERT INTO pipes (name, maker, shape, store, buyyear) VALUES (?, ?, ?, ?, ?)',
-              (pipe.name, pipe.maker, pipe.shape, pipe.store, pipe.buyyear))
-    conn.commit()
-    conn.close()
-    
+    # see if pipe already exist, if not write to database, if no diplay warning window
+    testpipe = pipe.name
+    query = c.execute("SELECT * FROM pipes WHERE name = ?", (testpipe,))
+    result = c.fetchone()
+
+    if not result:
+
+        c.execute('INSERT INTO pipes (name, maker, shape, store, buyyear) VALUES (?, ?, ?, ?, ?)',
+                  (pipe.name, pipe.maker, pipe.shape, pipe.store, pipe.buyyear))
+        conn.commit()
+        conn.close()
+
+    else:
+
+        warning_box = QMessageBox()
+        warning_box.setIcon(QMessageBox.Icon.Warning)
+        warning_box.setWindowTitle('Warning')
+        warning_box.setText('There is already a pipe with that name in the database')
+        warning_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+        warning_box.exec()
+
+
 # Create a PyQt6 GUI to enter object attributes and add them to the database
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -53,10 +68,10 @@ class MainWindow(QMainWindow):
 
         self.shape_label = QLabel('Shape:')
         self.shape_input = QLineEdit()
-        
+
         self.store_label = QLabel('Store:')
         self.store_input = QLineEdit()
-        
+
         self.buyyear_label = QLabel('Year Purchased:')
         self.buyyear_input = QLineEdit()
 
@@ -88,42 +103,20 @@ class MainWindow(QMainWindow):
         buyyear = int(self.buyyear_input.text())
 
         pipe = Pipe(name, maker, shape, store, buyyear)
-        #see if pipe already exist
-        testpipe = pipe.name
-        
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        query = c.execute("SELECT * FROM pipes WHERE name = ?", (testpipe,))
-        result = c.fetchone()
-        print("result")
-        print(result)
-        
-        if result != None:
-            
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Error")
-            msg_box.setText("A pipe having that name alreadt exists in database.")
-            msg_box.setIcon(QMessageBox.Icon.Information)
-            msg_box.exec()
-            
-        else:
-
-            insert_pipe(pipe)
+        insert_pipe(pipe)
 
         self.name_input.clear()
         self.maker_input.clear()
         self.shape_input.clear()
         self.store_input.clear()
         self.buyyear_input.clear()
-        
+
+
 # Start the application
 
 if __name__ == '__main__':
-
+    #     create_table()
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
-
-
-
