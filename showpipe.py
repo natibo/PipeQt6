@@ -1,12 +1,9 @@
 import sqlite3
 from PyQt6.QtWidgets import (QApplication, QMainWindow,
                              QTableWidget, QTableWidgetItem, QWidget)
-class Showpipe(QMainWindow):
+class Showpipe(QWidget):
     def __init__(self):
         super().__init__()
-        self.init_ui()
-
-    def init_ui(self):
         self.setWindowTitle("Pipes in your database")
         self.setGeometry(100, 100, 800, 600)
 
@@ -38,4 +35,3 @@ class Showpipe(QMainWindow):
                     self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
 
         connection.close()
-

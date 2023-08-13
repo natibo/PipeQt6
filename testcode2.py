@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QLabel,
                              QVBoxLayout, QWidget, QLineEdit, QPushButton, QMessageBox)
 import sqlite3
@@ -37,7 +38,7 @@ def insert_pipe(pipe):
 
 
 # Create a PyQt6 GUI to enter object attributes and add them to the database
-class MainWindow(QMainWindow):
+class SubWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -104,6 +105,9 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     #     create_table()
     app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
+    # window = QWidget()
+    # window.show()
+    # sys.exit(app.exec())
+    sub_window = SubWindow()
+    sub_window.show()
     sys.exit(app.exec())

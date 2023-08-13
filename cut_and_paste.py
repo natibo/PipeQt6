@@ -1,34 +1,33 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox
+from pipeclass import Pipe
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QLabel
 
-
-class PopupWindow(QWidget):
-    def __init__(self):
+class AttributeWindow(QWidget):
+    def __init__(self, obj):
         super().__init__()
-        self.init_ui()
+        self.setWindowTitle("Attribute Window")
+        self.setGeometry(200, 200, 400, 200)
 
-    def init_ui(self):
-        self.setGeometry(100, 100, 300, 200)
-        self.setWindowTitle('Popup Warning Example')
+        layout = QVBoxLayout()
+        label = QLabel("Attributes:")
+        attributes_label = QLabel(f"Attribute 1: {obj.attribute1}\n"
+                                  f"Attribute 2: {obj.attribute2}\n"
+                                  f"Attribute 3: {obj.attribute3}\n"
+                                  f"Attribute 4: {obj.attribute4}\n"
+                                  f"Attribute 5: {obj.attribute5}")
+        layout.addWidget(label)
+        layout.addWidget(attributes_label)
 
-        self.warning_button = QPushButton('Show Warning', self)
-        self.warning_button.setGeometry(50, 50, 200, 50)
-        self.warning_button.clicked.connect(self.show_warning)
+        self.setLayout(layout)
 
-    def show_warning(self):
-        condition = True  # Replace with your actual condition
-
-        if condition:
-            warning_box = QMessageBox()
-            warning_box.setIcon(QMessageBox.Icon.Warning)
-            warning_box.setWindowTitle('Warning')
-            warning_box.setText('This is a warning message!')
-            warning_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-            warning_box.exec()
-
-
-if __name__ == '__main__':
+def show_attributes(obj):
     app = QApplication(sys.argv)
-    window = PopupWindow()
-    window.show()
+
+    attribute_window = AttributeWindow(obj)
+    attribute_window.show()
+
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    my_object = MyObject("Value 1", "Value 2", "Value 3", "Value 4", "Value 5")
+    show_attributes(my_object)

@@ -1,46 +1,71 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton
 
-class MainWindow(QMainWindow):
+class Person:
+    def __init__(self, name, age, address, email, phone):
+        self.name = name
+        self.age = age
+        self.address = address
+        self.email = email
+        self.phone = phone
+
+class InputForm(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Main Window")
+        self.init_ui()
 
+    def init_ui(self):
         layout = QVBoxLayout()
-        self.label = QLabel("Press the button to open the new window.")
-        layout.addWidget(self.label)
 
-        button = QPushButton("Open New Window")
-        button.clicked.connect(self.open_new_window)
-        layout.addWidget(button)
+        self.name_input = QLineEdit()
+        self.age_input = QLineEdit()
+        self.address_input = QLineEdit()
+        self.email_input = QLineEdit()
+        self.phone_input = QLineEdit()
 
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
+        layout.addWidget(QLabel("Name:"))
+        layout.addWidget(self.name_input)
 
-    def open_new_window(self):
-        if check_condition():  # Replace this with your actual condition/function
-            new_window = NewWindow(self)
-            new_window.show()
+        layout.addWidget(QLabel("Age:"))
+        layout.addWidget(self.age_input)
 
-class NewWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+        layout.addWidget(QLabel("Address:"))
+        layout.addWidget(self.address_input)
 
-        self.setWindowTitle("New Window")
+        layout.addWidget(QLabel("Email:"))
+        layout.addWidget(self.email_input)
 
-        layout = QVBoxLayout()
-        label = QLabel("This is the new window.")
-        layout.addWidget(label)
+        layout.addWidget(QLabel("Phone:"))
+        layout.addWidget(self.phone_input)
+
+        submit_button = QPushButton("Create Object")
+        submit_button.clicked.connect(self.create_person_object)
+        layout.addWidget(submit_button)
 
         self.setLayout(layout)
 
-def check_condition():
-    return True  # Replace with your actual condition
+    def create_person_object(self):
+        name = self.name_input.text()
+        age = self.age_input.text()
+        address = self.address_input.text()
+        email = self.email_input.text()
+        phone = self.phone_input.text()
+
+        person = Person(name, age, address, email, phone)
+        print("Person object created with attributes:")
+        print("Name:", person.name)
+        print("Age:", person.age)
+        print("Address:", person.address)
+        print("Email:", person.email)
+        print("Phone:", person.phone)
+
+def main():
+    app = QApplication(sys.argv)
+    window = InputForm()
+    window.setWindowTitle("Person Object Creator")
+    window.show()
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
-    sys.exit(app.exec())
+    main()

@@ -1,42 +1,12 @@
 import sys
+import os
+from showpipe import Showpipe
+from Insertpipe import InputForm
 import sqlite3
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QLabel, QCheckBox,
                              QPushButton, QTableWidget, QTableWidgetItem, QWidget)
-class Showpipe(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Pipes in your database")
-        self.setGeometry(100, 100, 800, 600)
 
-        self.table_widget = QTableWidget(self)
-        self.table_widget.setGeometry(10, 10, 780, 580)
-
-        self.load_data()
-
-    def load_data(self):
-        connection = sqlite3.connect("database.db")
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT * FROM pipes")
-        rows = cursor.fetchall()
-
-        if len(rows) > 0:
-            num_rows = len(rows)
-            num_cols = len(rows[0])
-            self.table_widget.setRowCount(num_rows)
-            self.table_widget.setColumnCount(num_cols)
-
-            # Set column headers
-            column_names = [description[0] for description in cursor.description]
-            self.table_widget.setHorizontalHeaderLabels(column_names)
-
-            # Populate table
-            for row_idx, row in enumerate(rows):
-                for col_idx, value in enumerate(row):
-                    self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
-
-        connection.close()
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -76,9 +46,12 @@ class MainWindow(QMainWindow):
         if self.checkbox1.isChecked():
             self.w = Showpipe()
             self.w.show()
+            self.checkbox1.setChecked(False)
 
         if self.checkbox2.isChecked():
-            actions.append("Option 2 is checked.")
+            self.w = InputForm()
+            self.w.show()
+            self.checkbox1.setChecked(False)
 
         if self.checkbox3.isChecked():
             actions.append("Option 3 is checked.")
@@ -90,7 +63,7 @@ class MainWindow(QMainWindow):
             result_text = "\n".join(actions)
             self.show_result_message(result_text)
         else:
-            self.show_result_message("No options selected.")
+            pass
 
     def show_result_message(self, message):
         result_label = QLabel(message, self)
